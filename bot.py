@@ -1,11 +1,15 @@
 #------------------imports-----------------------
 import sys
+import time
+
 import discord
 import random
 import requests
+
+import variables
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
-import time
 from discord.ext import commands
 
 #------------------OS get------------------------
@@ -145,4 +149,4 @@ async def clear(ctx, amount = 5):
     await ctx.channel.purge(limit = amount + 1)
 
 #------------------bot-run-----------------------
-bot.run('ODMyNjk4MzUxNzM2NzE3Mzcx.YHnkxQ.mZRc0rnWd3i9isFWN22zMJBUogQ')
+bot.run(variables.token)
