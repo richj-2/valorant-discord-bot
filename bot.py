@@ -1,5 +1,6 @@
 #------------------imports-----------------------
 import sys
+import platform
 import time
 
 import discord
@@ -8,21 +9,25 @@ import requests
 
 import variables
 
+from discord.ext import commands
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from discord.ext import commands
 
 #------------------OS get------------------------
-def os_get(os):
-	common = {
-		'linux': 'driver/linux64/chromedriver',
-		'win32': 'driver/win32/chromedriver.exe',
-		'cygwin': 'driver/win32/chromedriver.exe',
-		'darwin': 'driver/mac64/chromedriver'
+def os_get(os, arch):
+	AMD64 = {
+		'linux': 'driver/linux64/geckodriver',
+		'win32': 'driver/win64/geckodriver.exe',
+		'cygwin': 'driver/win64/geckodriver.exe',
+		'darwin': 'driver/mac64/geckodriver'
+	}
+	x86_64 = AMD64
+	aarch64 = {
+		'linux': 'driver/armv7/geckodriver'
 	}
 	global path
-	path = common.get(os, 'OS not found')
-os_get(sys.platform)
+	path = eval(platform.machine() + '.get(os, "OS not found")')
+os_get(sys.platform, platform.machine)
 
 #------------------bot setup---------------------
 bot = commands.Bot(command_prefix = 'val.')
@@ -35,14 +40,10 @@ async def on_ready():
 
 #------------------WEB SCRAPER-------------------
 def leaderboard_get(page):
-    #sets up chrome driver
-    userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"
-    options = webdriver.ChromeOptions()
-    options.add_argument('--ignore-certificate-errors')
-    options.add_argument('--incognito')
-    options.add_argument('--headless')
-    options.add_argument(f'user-agent={userAgent}')
-    driver = webdriver.Chrome(executable_path = path, options = options)
+    #sets up firefox driver
+    options = webdriver.firefox.options.Options()
+    options.headless = True
+    driver = webdriver.Firefox(executable_path = path, options = options)
     
     #opens the valorant page using custom page number
     #closes after 3 seconds
@@ -70,14 +71,10 @@ def leaderboard_get(page):
 
 #------------------Find player using webscraper--
 def find_player(player_name):
-    #chrome setup
-    userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"
-    options = webdriver.ChromeOptions()
-    options.add_argument('--ignore-certificate-errors')
-    options.add_argument('--incognito')
-    options.add_argument('--headless')
-    options.add_argument(f'user-agent={userAgent}')
-    driver = webdriver.Chrome(executable_path = path, options = options)
+    #firefox setup
+    options = webdriver.firefox.options.Options()
+    options.headless = True
+    driver = webdriver.Firefox(executable_path = path, options = options)
 
     #opens up valorant leaderboards
     #searches for player name with argument player_name
