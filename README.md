@@ -1,7 +1,7 @@
 # valorant-discord-bot
 ### A discord bot that allows you to see the valorant immortal leaderboards.
 ### Depends: discord, requests, bs4, selenium, html5lib
-### Chrome v90 must be installed
+### Recent Firefox release must be installed
 
 ### Rename variables.py.dummy to variables.py and insert your bot token there
 ### Run via bot.py
