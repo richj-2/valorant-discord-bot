@@ -6,3 +6,5 @@ A discord bot that allows you to see the valorant immortal leaderboards.
 ---I also left my commented out code that doesn't work so just ignore that....---
 
 If you want to use this bot just copy the code and add the token at the bottom where it has my token
+
+DEPENDENCIES: discord, bs4, requests, selenium
