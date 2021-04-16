@@ -3,6 +3,9 @@
 ### Depends: discord, requests, bs4, selenium, html5lib
 ### Chrome v90 must be installed
 
+### Rename variables.py.dummy to variables.py and insert your bot token there
+### Run via bot.py
+
 #### THIS IS MY FIRST PROGRAM, feel free to give me feedback
 ##### I accidently kept in my bot's token. but discord automatically changed it so...
 ###### I also left my commented out code that doesn't work so just ignore that....
