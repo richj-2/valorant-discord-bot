@@ -34,17 +34,21 @@ bot = commands.Bot(command_prefix = 'val.')
 
 @bot.event
 async def on_ready():
-    print('Bot is ready.')
+    print ('Bot is ready.')
     game = discord.Game('Im watching you...')
     await bot.change_presence(status = discord.Status.online, activity = game)
 
 #------------------WEB SCRAPER-------------------
 def leaderboard_get(page):
     #sets up firefox driver
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     options = webdriver.firefox.options.Options()
     options.headless = True
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--allow-running-insecure-content')
+    options.add_argument(f'user-agent={user_agent}')
     driver = webdriver.Firefox(executable_path = path, options = options)
-    
+
     #opens the valorant page using custom page number
     #closes after 3 seconds
     driver.get(f'https://playvalorant.com/en-us/leaderboards/?page={page}&act=ab57ef51-4e59-da91-cc8d-51a5a2b9b8ff')
@@ -54,7 +58,7 @@ def leaderboard_get(page):
     driver.close()
 
     #converts selenium to a soup object
-    output_string = '\n'
+    output_string = ""
     soup = BeautifulSoup(page_source, features = 'html5lib')
     top_players = soup.find_all('li', class_ = 'LeaderboardsItem-module--leaderboardsItem--1gN45')
     #finds top players using class and adds onto the output
@@ -65,8 +69,8 @@ def leaderboard_get(page):
         rating = top_player.find('p', class_ = 'LeaderboardsItem-module--rating--1zqAY')
 
         output_string += f'Rank: {rank.text}, {name.text} ({rating.text} elo)\n'
-    
-    print(output_string)
+
+    print (output_string)
     return output_string
 
 #------------------Find player using webscraper--
@@ -81,7 +85,7 @@ def find_player(player_name):
     driver.get('https://playvalorant.com/en-us/leaderboards/?page=1&act=ab57ef51-4e59-da91-cc8d-51a5a2b9b8ff')
     driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
     time.sleep(1)
-    #print(driver.page_source)
+    #print (driver.page_source)
 
     searchBox = driver.find_element_by_id('search')
     searchBox.send_keys(player_name)
@@ -89,12 +93,12 @@ def find_player(player_name):
 
     time.sleep(2)
     page_source = driver.page_source
-    #print(page_source)
+    #print (page_source)
     driver.close()
 
     #compares the name of all names in leaderboard and returns the match
     #returns an excepting string if can't find anything
-    output_string = '\n'
+    output_string = ""
     soup = BeautifulSoup(page_source, features = 'html5lib')
     top_players = soup.find_all('li', class_ = 'leaderboards-module--highlight--jUhwl')
     for top_player in top_players:
@@ -104,19 +108,19 @@ def find_player(player_name):
         rating = top_player.find('p', class_ = 'LeaderboardsItem-module--rating--1zqAY')
 
         output_string += f'Rank: {rank.text}, {name.text} ({rating.text} elo)\n'
-    
-    print(output_string)
+
+    print (output_string)
     return output_string
-    
+
     #rank = top_player.find('h3', class_='LeaderboardsItem-module--leaderboardRank--3DHty')
     #name = top_player.find('h2', class_='LeaderboardsItem-module--playerName--2BYaw')
     #tag = top_player.find('span', class_='LeaderboardsItem-module--tagline--24Wgn') -- unnessary
     #rating = top_player.find('p', class_='LeaderboardsItem-module--rating--1zqAY')
 
-    #print(name.text)
-        #print(player_name)
-        #print(str(name.text == player_name))
-    print('\n')
+    #print (name.text)
+        #print (player_name)
+        #print (str(name.text == player_name))
+    print ('\n')
 
         #if name.text == player_name:
             #output_string = f'{player_name} is {rank}th on the leaderboard with {rating}elo'
@@ -130,7 +134,7 @@ async def topval(ctx, input = '1'):
     if input.isnumeric() == True:
         #Find leaderboard with input as page
         await ctx.send(leaderboard_get(int(input)))
-        
+
     else:
         #Find player in leaderboard and rank
         await ctx.send(find_player(input))
